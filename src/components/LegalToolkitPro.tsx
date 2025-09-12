@@ -5,10 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Copy, Download, FileText, IdCard, Printer, RefreshCw } from "lucide-react";
+import { Copy, Download, FileText, Contact, Printer, RefreshCw } from "lucide-react";
 import { toPng } from "html-to-image";
 import jsPDF from "jspdf";
 import { PricingPlans } from "@/components/PricingPlans";
@@ -218,61 +217,128 @@ export default function LegalToolkitPro(){
           <div className="grid gap-4 md:grid-cols-3">
             <div>
               <Label>Document Type</Label>
-              <Select value={state.documentType} onValueChange={(v)=>dispatch({type:"set", key:"documentType", value:v})}>
-                <SelectTrigger className="mt-1"><SelectValue placeholder="Choose"/></SelectTrigger>
-                <SelectContent>
-                  {DocType.options.map((t)=> (<SelectItem key={t} value={t}>{t}</SelectItem>))}
-                </SelectContent>
-              </Select>
+              <select
+                className="mt-1 w-full rounded-md border px-2 py-2 text-sm"
+                value={state.documentType}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                  dispatch({ type: "set", key: "documentType", value: e.target.value as DocType })
+                }
+              >
+                <option value="" disabled>Choose</option>
+                {DocType.options.map((t) => (
+                  <option key={t} value={t}>
+                    {t}
+                  </option>
+                ))}
+              </select>
             </div>
             <div>
               <Label>State</Label>
-              <Select value={state.selectedState as string} onValueChange={(v)=>dispatch({type:"set", key:"selectedState", value:v})}>
-                <SelectTrigger className="mt-1"><SelectValue placeholder="Select a state"/></SelectTrigger>
-                <SelectContent className="max-h-72">
-                  {["", ...ALL_STATES].map((c)=> (<SelectItem key={c || "none"} value={c as string}>{c || "—"}</SelectItem>))}
-                </SelectContent>
-              </Select>
+              <select
+                className="mt-1 w-full rounded-md border px-2 py-2 text-sm"
+                value={state.selectedState as string}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                  dispatch({ type: "set", key: "selectedState", value: e.target.value })
+                }
+              >
+                <option value="">—</option>
+                {ALL_STATES.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
             </div>
             <div>
               <Label>Agency / Recipient</Label>
-              <Input className="mt-1" value={state.agency} onChange={(e)=>dispatch({type:"set", key:"agency", value:e.target.value})} placeholder="e.g., City Clerk / Records Custodian"/>
+              <Input
+                className="mt-1"
+                value={state.agency}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  dispatch({ type: "set", key: "agency", value: e.target.value })
+                }
+                placeholder="e.g., City Clerk / Records Custodian"
+              />
             </div>
           </div>
 
           <div className="grid gap-4 md:grid-cols-3">
             <div>
               <Label>Jurisdiction</Label>
-              <Input className="mt-1" value={state.jurisdiction} onChange={(e)=>dispatch({type:"set", key:"jurisdiction", value:e.target.value})} placeholder="Auto‑filled by state"/>
+              <Input
+                className="mt-1"
+                value={state.jurisdiction}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  dispatch({ type: "set", key: "jurisdiction", value: e.target.value })
+                }
+                placeholder="Auto‑filled by state"
+              />
             </div>
             <div>
               <Label>Statute</Label>
-              <Input className="mt-1" value={state.statute} onChange={(e)=>dispatch({type:"set", key:"statute", value:e.target.value})} placeholder="Auto‑filled by doc type"/>
+              <Input
+                className="mt-1"
+                value={state.statute}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  dispatch({ type: "set", key: "statute", value: e.target.value })
+                }
+                placeholder="Auto‑filled by doc type"
+              />
             </div>
             <div>
               <Label>Time Limit</Label>
-              <Input className="mt-1" value={state.timeLimit} onChange={(e)=>dispatch({type:"set", key:"timeLimit", value:e.target.value})} placeholder="Auto‑filled by doc type"/>
+              <Input
+                className="mt-1"
+                value={state.timeLimit}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  dispatch({ type: "set", key: "timeLimit", value: e.target.value })
+                }
+                placeholder="Auto‑filled by doc type"
+              />
             </div>
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
             <div>
               <Label>Subject / Incident</Label>
-              <Textarea className="mt-1" rows={5} value={state.incident} onChange={(e)=>dispatch({type:"set", key:"incident", value:e.target.value})} placeholder="Describe records sought or facts (who/what/when/where)"/>
+              <Textarea
+                className="mt-1"
+                rows={5}
+                value={state.incident}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                  dispatch({ type: "set", key: "incident", value: e.target.value })
+                }
+                placeholder="Describe records sought or facts (who/what/when/where)"
+              />
             </div>
             <div className="space-y-4">
               <div>
                 <Label>Violation Type (Cease & Desist)</Label>
-                <Select value={state.violationType} onValueChange={(v)=>dispatch({type:"set", key:"violationType", value:v})}>
-                  <SelectTrigger className="mt-1"><SelectValue/></SelectTrigger>
-                  <SelectContent>
-                    {["harassment","intellectual_property","debt_collection","trespass","defamation","contract","privacy"].map((t)=> (<SelectItem key={t} value={t}>{t.replaceAll("_"," ")}</SelectItem>))}
-                  </SelectContent>
-                </Select>
+                <select
+                  className="mt-1 w-full rounded-md border px-2 py-2 text-sm"
+                  value={state.violationType}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                    dispatch({ type: "set", key: "violationType", value: e.target.value as FormState["violationType"] })
+                  }
+                >
+                  {["harassment","intellectual_property","debt_collection","trespass","defamation","contract","privacy"].map((t) => (
+                    <option key={t} value={t}>
+                      {t.replaceAll("_", " ")}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div>
                 <Label>Damages (optional)</Label>
-                <Textarea className="mt-1" rows={3} value={state.damages} onChange={(e)=>dispatch({type:"set", key:"damages", value:e.target.value})} placeholder="Monetary damages, reputational harm, etc."/>
+                <Textarea
+                  className="mt-1"
+                  rows={3}
+                  value={state.damages}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                    dispatch({ type: "set", key: "damages", value: e.target.value })
+                  }
+                  placeholder="Monetary damages, reputational harm, etc."
+                />
               </div>
             </div>
           </div>
@@ -285,36 +351,69 @@ export default function LegalToolkitPro(){
             <TabsContent value="parties" className="grid gap-4 md:grid-cols-3">
               <div>
                 <Label>Plaintiff</Label>
-                <Input className="mt-1" value={state.plaintiffName} onChange={(e)=>dispatch({type:"set", key:"plaintiffName", value:e.target.value})}/>
+                <Input
+                  className="mt-1"
+                  value={state.plaintiffName}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    dispatch({ type: "set", key: "plaintiffName", value: e.target.value })
+                  }
+                />
               </div>
               <div>
                 <Label>Defendant</Label>
-                <Input className="mt-1" value={state.defendantName} onChange={(e)=>dispatch({type:"set", key:"defendantName", value:e.target.value})}/>
+                <Input
+                  className="mt-1"
+                  value={state.defendantName}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    dispatch({ type: "set", key: "defendantName", value: e.target.value })
+                  }
+                />
               </div>
               <div>
                 <Label>Recipient (for C&D/Subpoena)</Label>
-                <Input className="mt-1" value={state.recipient} onChange={(e)=>dispatch({type:"set", key:"recipient", value:e.target.value})}/>
+                <Input
+                  className="mt-1"
+                  value={state.recipient}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    dispatch({ type: "set", key: "recipient", value: e.target.value })
+                  }
+                />
               </div>
             </TabsContent>
             <TabsContent value="case" className="grid gap-4 md:grid-cols-3">
               <div>
                 <Label>Claim Type</Label>
-                <Select value={state.claimType} onValueChange={(v)=>dispatch({type:"set", key:"claimType", value:v})}>
-                  <SelectTrigger className="mt-1"><SelectValue/></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="general">General</SelectItem>
-                    <SelectItem value="government">Government Tort</SelectItem>
-                    <SelectItem value="medical">Medical</SelectItem>
-                  </SelectContent>
-                </Select>
+                <select
+                  className="mt-1 w-full rounded-md border px-2 py-2 text-sm"
+                  value={state.claimType}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                    dispatch({ type: "set", key: "claimType", value: e.target.value as FormState["claimType"] })
+                  }
+                >
+                  <option value="general">General</option>
+                  <option value="government">Government Tort</option>
+                  <option value="medical">Medical</option>
+                </select>
               </div>
               <div>
                 <Label>Case Number</Label>
-                <Input className="mt-1" value={state.caseNumber} onChange={(e)=>dispatch({type:"set", key:"caseNumber", value:e.target.value})}/>
+                <Input
+                  className="mt-1"
+                  value={state.caseNumber}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    dispatch({ type: "set", key: "caseNumber", value: e.target.value })
+                  }
+                />
               </div>
               <div>
                 <Label>Court Name</Label>
-                <Input className="mt-1" value={state.courtName} onChange={(e)=>dispatch({type:"set", key:"courtName", value:e.target.value})}/>
+                <Input
+                  className="mt-1"
+                  value={state.courtName}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    dispatch({ type: "set", key: "courtName", value: e.target.value })
+                  }
+                />
               </div>
             </TabsContent>
           </Tabs>
@@ -378,7 +477,13 @@ export default function LegalToolkitPro(){
                 </div>
               </div>
             ) : (
-              <Textarea className="min-h-[300px]" value={state.generated} onChange={(e)=>dispatch({type:"generate", value:e.target.value})}/>
+              <Textarea
+                className="min-h-[300px]"
+                value={state.generated}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                  dispatch({ type: "generate", value: e.target.value })
+                }
+              />
             )}
           </CardContent>
         </Card>
@@ -390,7 +495,7 @@ export default function LegalToolkitPro(){
               <Button variant="outline" onClick={()=>copyToClipboard(state.generated)} disabled={state.documentType === "ID Rights Card" && !state.generated}><Copy className="mr-2 h-4 w-4"/>Copy Text</Button>
               <Button variant="outline" onClick={()=>downloadText(`${state.documentType.replaceAll(" ", "-").toLowerCase()}.txt`, state.generated)} disabled={state.documentType === "ID Rights Card" && !state.generated}><Download className="mr-2 h-4 w-4"/>Download .txt</Button>
               {state.documentType === "ID Rights Card" && (<>
-                <Button onClick={exportIdCardPNG}><IdCard className="mr-2 h-4 w-4"/>Export PNG</Button>
+                <Button onClick={exportIdCardPNG}><Contact className="mr-2 h-4 w-4"/>Export PNG</Button>
                 <Button onClick={exportIdCardPDF}><Printer className="mr-2 h-4 w-4"/>Export PDF</Button>
               </>)}
             </div>

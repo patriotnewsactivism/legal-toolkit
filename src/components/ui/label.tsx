@@ -1,5 +1,4 @@
 import React from "react";
-
 import { cn } from "@/lib/utils";
 
 export const Label = React.forwardRef<HTMLLabelElement, React.LabelHTMLAttributes<HTMLLabelElement>>(
@@ -12,9 +11,3 @@ export const Label = React.forwardRef<HTMLLabelElement, React.LabelHTMLAttribute
   )
 );
 Label.displayName = "Label";
-
-
-export const Label: React.FC<React.LabelHTMLAttributes<HTMLLabelElement>> = ({ className = "", ...props }) => (
-  <label className={`text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 ${className}`.trim()} {...props} />
-);
-
